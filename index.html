@@ -6,35 +6,33 @@
     <title>AI 금융·정책 실시간 인텔리전스 포럼</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        body { background-color: #0f172a; color: #f8fafc; padding: 20px; }
+        body { background-color: #0b1120; color: #f8fafc; padding: 24px 16px; }
         .container { max-width: 800px; margin: 0 auto; }
-        header { text-align: center; margin-bottom: 30px; }
-        h1 { font-size: 26px; color: #38bdf8; margin-bottom: 8px; }
+        header { text-align: center; margin-bottom: 28px; }
+        h1 { font-size: 26px; color: #38bdf8; margin-bottom: 8px; font-weight: 800; }
         p.subtitle { color: #94a3b8; font-size: 14px; }
         
-        .card { background: #1e293b; border-radius: 12px; padding: 20px; margin-bottom: 20px; border: 1px solid #334155; }
-        .category-tags { display: flex; gap: 8px; margin-bottom: 15px; }
-        .tag { background: #334155; color: #cbd5e1; padding: 4px 10px; border-radius: 20px; font-size: 12px; cursor: pointer; }
-        .tag.active { background: #0284c7; color: white; }
+        .card { background: #1e293b; border-radius: 12px; padding: 20px; margin-bottom: 24px; border: 1px solid #334155; }
+        .category-tags { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+        .tag { background: #334155; color: #cbd5e1; padding: 5px 12px; border-radius: 20px; font-size: 12px; cursor: pointer; transition: 0.2s; }
+        .tag:hover, .tag.active { background: #0284c7; color: white; }
         
         textarea { width: 100%; height: 90px; background: #0f172a; border: 1px solid #475569; border-radius: 8px; color: #fff; padding: 12px; resize: none; font-size: 14px; outline: none; }
         textarea:focus { border-color: #38bdf8; }
-        button.submit-btn { width: 100%; background: #0284c7; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 15px; }
+        button.submit-btn { width: 100%; background: #0284c7; color: white; border: none; padding: 13px; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 15px; transition: 0.2s; }
         button.submit-btn:hover { background: #0369a1; }
         
         .forum-feed { display: flex; flex-direction: column; gap: 16px; }
         .post-card { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px; }
-        .post-header { display: flex; justify-content: space-between; font-size: 13px; color: #94a3b8; margin-bottom: 10px; }
-        .post-title { font-size: 16px; font-weight: 600; color: #f1f5f9; margin-bottom: 12px; }
+        .post-header { display: flex; justify-content: space-between; font-size: 12px; color: #94a3b8; margin-bottom: 10px; }
+        .post-title { font-size: 16px; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
         
         .agent-responses { display: flex; flex-direction: column; gap: 12px; margin-top: 15px; border-top: 1px dashed #334155; padding-top: 15px; }
-        .agent-bubble { background: #0f172a; padding: 12px; border-radius: 8px; border-left: 4px solid #38bdf8; }
-        .agent-bubble.bear { border-left-color: #f43f5e; }
-        .agent-name { font-size: 12px; font-weight: bold; color: #38bdf8; margin-bottom: 4px; display: flex; align-items: center; gap: 5px; }
-        .agent-bubble.bear .agent-name { color: #f43f5e; }
-        .agent-text { font-size: 14px; line-height: 1.5; color: #e2e8f0; white-space: pre-wrap; }
+        .agent-bubble { background: #0f172a; padding: 14px; border-radius: 8px; border-left: 4px solid #38bdf8; }
+        .agent-name { font-size: 13px; font-weight: bold; color: #38bdf8; margin-bottom: 6px; }
+        .agent-text { font-size: 14px; line-height: 1.6; color: #e2e8f0; white-space: pre-wrap; }
         
-        .disclaimer { font-size: 11px; color: #64748b; text-align: center; margin-top: 40px; line-height: 1.4; }
+        .disclaimer { font-size: 12px; color: #64748b; text-align: center; margin-top: 40px; line-height: 1.5; }
     </style>
 </head>
 <body>
@@ -52,21 +50,21 @@
                 <span class="tag">정부지원금</span>
                 <span class="tag">부동산/대출</span>
             </div>
-            <textarea id="userInput" placeholder="궁금한 기업의 공시, 정책, 세무 질문을 입력하세요."></textarea>
-            <button class="submit-btn" onclick="submitQuestion()">AI 에이전트 교차 분석 시작</button>
+            <textarea id="userInput" placeholder="궁금한 기업의 공시, 정부 정책, 세무 질문을 입력하세요."></textarea>
+            <button class="submit-btn" id="btnSubmit" onclick="submitQuestion()">AI 에이전트 실시간 분석 시작</button>
         </div>
 
         <div class="forum-feed" id="feed">
             <div class="post-card">
                 <div class="post-header">
                     <span>#주식/공시 · 실시간 팩트체크</span>
-                    <span>10분 전</span>
+                    <span>방금 전 등록</span>
                 </div>
                 <div class="post-title">Q. 최근 발표된 3자배정 유상증자 공시, 기존 주주에게 호재인가요?</div>
                 <div class="agent-responses">
                     <div class="agent-bubble">
                         <div class="agent-name">🤖 AI 밸류에이션 봇</div>
-                        <div class="agent-text">배정 대상자가 대기업 전략적 투자자(SI)이고 보호예수가 설정되어 있다면 기업 가치 재평가 호재로 작용할 수 있습니다.</div>
+                        <div class="agent-text">배정 대상자가 대기업 등 전략적 투자자(SI)이고 1년 보호예수가 걸려 있다면 장기 가치 제고 요인으로 작용할 수 있습니다. 단, 신주 할인율과 지분 희석률을 함께 검토해야 합니다. (※ 본 답변은 참고용 정보입니다.)</div>
                     </div>
                 </div>
             </div>
@@ -79,15 +77,16 @@
     </div>
 
     <script>
-        const GROQ_API_KEY = "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"; 
-
         async function submitQuestion() {
             const input = document.getElementById('userInput');
+            const btn = document.getElementById('btnSubmit');
             const feed = document.getElementById('feed');
             const question = input.value.trim();
             if (!question) return;
 
             input.value = '';
+            btn.disabled = true;
+            btn.innerText = 'AI 분석 진행 중...';
 
             const loadingId = 'loading-' + Date.now();
             const newCard = document.createElement('div');
@@ -96,42 +95,37 @@
                 <div class="post-header"><span>#실시간 Q&A 분석</span><span>방금 전</span></div>
                 <div class="post-title">Q. ${question}</div>
                 <div class="agent-responses" id="${loadingId}">
-                    <div class="agent-text" style="color: #38bdf8;">🔄 AI 에이전트들이 공시와 정책 데이터를 교차 분석 중입니다...</div>
+                    <div class="agent-text" style="color: #38bdf8;">🔄 AI 에이전트가 공시 및 시장 데이터를 분석 중입니다...</div>
                 </div>
             `;
             feed.insertBefore(newCard, feed.firstChild);
 
             try {
-                const response = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+                const response = await fetch("/api/chat", {
                     method: "POST",
-                    headers: {
-                        "Authorization": `Bearer ${GROQ_API_KEY}`,
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        model: "llama3-8b-8192",
-                        messages: [
-                            { role: "system", content: "당신은 한국의 금융, 주식 공시, 정책, 세무 데이터를 심층 분석하는 'AI 팩트체크 에이전트'입니다. 사용자의 질문에 대해 팩트 기반으로 3~4문장으로 간결하고 전문적인 답변을 한국어로 제공하세요. 답변 끝에는 '(본 답변은 AI가 정리한 참고용 데이터로 투자 권유가 아닙니다.)'를 붙이세요." },
-                            { role: "user", content: question }
-                        ],
-                        temperature: 0.5,
-                        max_tokens: 400
-                    })
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ question })
                 });
 
                 const data = await response.json();
-                const aiAnswer = data.choices[0].message.content;
+                const responseContainer = document.getElementById(loadingId);
 
+                if (data.answer) {
+                    responseContainer.innerHTML = `
+                        <div class="agent-bubble">
+                            <div class="agent-name">🤖 AI 팩트체크 에이전트</div>
+                            <div class="agent-text">${data.answer}</div>
+                        </div>
+                    `;
+                } else {
+                    responseContainer.innerHTML = `<div class="agent-text" style="color: #f43f5e;">분석 생성 실패: ${data.error || '잠시 후 다시 시도해주세요.'}</div>`;
+                }
+            } catch (err) {
                 const responseContainer = document.getElementById(loadingId);
-                responseContainer.innerHTML = `
-                    <div class="agent-bubble">
-                        <div class="agent-name">🤖 AI 팩트체크 에이전트</div>
-                        <div class="agent-text">${aiAnswer}</div>
-                    </div>
-                `;
-            } catch (error) {
-                const responseContainer = document.getElementById(loadingId);
-                responseContainer.innerHTML = `<div class="agent-text" style="color: #f43f5e;">데이터 처리 중 오류가 발생했습니다.</div>`;
+                responseContainer.innerHTML = `<div class="agent-text" style="color: #f43f5e;">서버 통신 오류가 발생했습니다.</div>`;
+            } finally {
+                btn.disabled = false;
+                btn.innerText = 'AI 에이전트 실시간 분석 시작';
             }
         }
     </script>
