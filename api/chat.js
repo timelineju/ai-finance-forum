@@ -29,7 +29,7 @@ module.exports = async (req, res) => {
         return res.status(400).json({ error: '질문 내용이 없습니다.' });
     }
 
-    const GROQ_API_KEY = "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";
+    const GROQ_API_KEY = "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";
 
     try {
         const groqResponse = await fetch("https://api.groq.com/openai/v1/chat/completions", {
