@@ -23,14 +23,18 @@ module.exports = async (req, res) => {
 
     const API_KEY = "AQ.Ab8RN6LrakOCV_1ENOw9kyyq6DQAMw0nLwQgSGUP_yo5YskwUw";
 
-    // 삼성전자 관련 시세 질문 시 네이버 실제 데이터 파싱
+    // 삼성전자 및 삼전, 주가 관련 모든 키워드 매칭
     let marketContext = "";
-    if (question.includes("삼성전자") || question.includes("주가")) {
+    const isSamsungQuery = /삼성전자|삼전|005930/.test(question);
+
+    if (isSamsungQuery) {
         try {
-            const priceRes = await fetch("https://m.stock.naver.com/api/stock/005930/basic");
+            const priceRes = await fetch("https://m.stock.naver.com/api/stock/005930/basic", {
+                headers: { 'User-Agent': 'Mozilla/5.0' }
+            });
             const priceData = await priceRes.json();
             if (priceData && priceData.nowPrice) {
-                marketContext = `[실시간 삼성전자(005930) 시세 데이터: 현재가 ${priceData.nowPrice}원, 전일대비 ${priceData.changePrice}원(${priceData.fluctuationRate}%), 시가 ${priceData.openPrice}원, 고가 ${priceData.highPrice}원, 저가 ${priceData.lowPrice}원]`;
+                marketContext = `[실시간 삼성전자(005930) 시세: 현재가 ${priceData.nowPrice}원, 전일대비 ${priceData.changePrice}원(${priceData.fluctuationRate}%), 시가 ${priceData.openPrice}원, 고가 ${priceData.highPrice}원, 저가 ${priceData.lowPrice}원]`;
             }
         } catch (e) {
             marketContext = "";
@@ -40,15 +44,15 @@ module.exports = async (req, res) => {
     try {
         const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${API_KEY}`;
         const promptText = `당신은 실시간 금융 분석 AI입니다.
-반드시 아래 [실시간 데이터]에 적힌 수치를 절대적 사실로 간주하고 질문에 답하세요. 자체적인 과거 기억이나 추측으로 수치를 왜곡하지 마세요.
+아래 [실시간 데이터]의 수치를 기반으로 질문에 명확하게 답변하세요.
 
 ${marketContext}
 
 사용자 질문: ${question}
 
 규칙:
-- 주가 질문일 경우 위 데이터에 명시된 현재가, 고가, 저가, 시가 수치를 그대로 읽어서 명확하게 안내할 것.
-- 답변 끝에는 '(※ 본 답변은 실시간 금융 공개 데이터를 기반으로 자동 분석된 참고용 정보입니다.)'를 붙일 것.`;
+- 주가 질문일 경우 위 데이터에 나온 현재가, 시가, 고가, 저가, 전일대비 등락폭을 정확한 수치로 안내하세요.
+- 답변 끝에는 '(※ 본 답변은 실시간 금융 공개 데이터를 기반으로 자동 분석된 참고용 정보입니다.)'를 붙이세요.`;
 
         const response = await fetch(url, {
             method: "POST",
