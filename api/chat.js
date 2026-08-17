@@ -24,7 +24,8 @@ module.exports = async (req, res) => {
     const GEMINI_API_KEY = "AQ.Ab8RN6LrakOCV_1ENOw9kyyq6DQAMw0nLwQgSGUP_yo5YskwUw";
 
     try {
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+        // 활성 모델 gemini-3.6-flash 지정
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${GEMINI_API_KEY}`;
         
         const response = await fetch(url, {
             method: "POST",
@@ -33,11 +34,9 @@ module.exports = async (req, res) => {
                 "x-goog-api-key": GEMINI_API_KEY
             },
             body: JSON.stringify({
-                // AI가 스스로 필요 여부를 판단해 실시간 구글 검색을 수행하는 공식 도구
-                tools: [{ google_search: {} }],
                 systemInstruction: {
                     parts: [{
-                        text: "당신은 사용자 의도를 유연하게 파악하는 스마트한 금융·경제·일상 AI입니다. 일상 대화나 원리 설명은 자연스럽고 명확하게 답변하고, 실시간 시세/뉴스/최신 정책 질문은 연동된 구글 검색 결과를 기반으로 정확한 최신 수치와 팩트를 전달하세요. 정형화된 틀에 얽매이지 말고 자연스럽게 대답하세요."
+                        text: "당신은 사용자의 질문 의도를 정확하게 파악하는 스마트한 AI 에이전트입니다. 인사에는 친절하게 맞인사하고, 금융·시세·정책 등의 질문에는 구체적인 핵심 팩트와 수치 위주로 유연하고 명확하게 답변하세요."
                     }]
                 },
                 contents: [{
