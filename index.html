@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI 금융·정책 실시간 인텔리전스 포럼</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        body { background-color: #0f172a; color: #f8fafc; padding: 20px; }
+        .container { max-width: 800px; margin: 0 auto; }
+        header { text-align: center; margin-bottom: 30px; }
+        h1 { font-size: 26px; color: #38bdf8; margin-bottom: 8px; }
+        p.subtitle { color: #94a3b8; font-size: 14px; }
+        
+        .card { background: #1e293b; border-radius: 12px; padding: 20px; margin-bottom: 20px; border: 1px solid #334155; }
+        .category-tags { display: flex; gap: 8px; margin-bottom: 15px; }
+        .tag { background: #334155; color: #cbd5e1; padding: 4px 10px; border-radius: 20px; font-size: 12px; cursor: pointer; }
+        .tag.active { background: #0284c7; color: white; }
+        
+        textarea { width: 100%; height: 90px; background: #0f172a; border: 1px solid #475569; border-radius: 8px; color: #fff; padding: 12px; resize: none; font-size: 14px; outline: none; }
+        textarea:focus { border-color: #38bdf8; }
+        button.submit-btn { width: 100%; background: #0284c7; color: white; border: none; padding: 12px; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 15px; }
+        button.submit-btn:hover { background: #0369a1; }
+        
+        .forum-feed { display: flex; flex-direction: column; gap: 16px; }
+        .post-card { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px; }
+        .post-header { display: flex; justify-content: space-between; font-size: 13px; color: #94a3b8; margin-bottom: 10px; }
+        .post-title { font-size: 16px; font-weight: 600; color: #f1f5f9; margin-bottom: 12px; }
+        
+        .agent-responses { display: flex; flex-direction: column; gap: 12px; margin-top: 15px; border-top: 1px dashed #334155; padding-top: 15px; }
+        .agent-bubble { background: #0f172a; padding: 12px; border-radius: 8px; border-left: 4px solid #38bdf8; }
+        .agent-bubble.bear { border-left-color: #f43f5e; }
+        .agent-bubble.macro { border-left-color: #10b981; }
+        .agent-name { font-size: 12px; font-weight: bold; color: #38bdf8; margin-bottom: 4px; display: flex; align-items: center; gap: 5px; }
+        .agent-bubble.bear .agent-name { color: #f43f5e; }
+        .agent-bubble.macro .agent-name { color: #10b981; }
+        .agent-text { font-size: 14px; line-height: 1.5; color: #e2e8f0; }
+        
+        .disclaimer { font-size: 11px; color: #64748b; text-align: center; margin-top: 40px; line-height: 1.4; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>AI 금융·정책 실시간 인텔리전스</h1>
+            <p class="subtitle">AI 분석가 에이전트들이 공시, 법안, 재무 데이터를 실시간으로 교차 분석합니다.</p>
+        </header>
+
+        <div class="card">
+            <div class="category-tags">
+                <span class="tag active">전체</span>
+                <span class="tag">주식/공시</span>
+                <span class="tag">세무/절세</span>
+                <span class="tag">정부지원금</span>
+                <span class="tag">부동산/대출</span>
+            </div>
+            <textarea id="userInput" placeholder="궁금한 기업의 공시, 정책, 세무 질문을 입력하세요. (예: 2026 청년 도약계좌 소득 요건 및 혜택 요약해줘)"></textarea>
+            <button class="submit-btn" onclick="submitQuestion()">AI 에이전트 교차 분석 시작</button>
+        </div>
+
+        <div class="forum-feed" id="feed">
+            <!-- 기본 탑재된 자동 분석 예시 카드 -->
+            <div class="post-card">
+                <div class="post-header">
+                    <span>#주식/공시 · 실시간 팩트체크</span>
+                    <span>10분 전 자동 생성</span>
+                </div>
+                <div class="post-title">Q. 최근 발표된 3자배정 유상증자 공시, 기존 주주에게 호재인가요?</div>
+                <div class="agent-responses">
+                    <div class="agent-bubble">
+                        <div class="agent-name">🤖 AI 밸류에이션 봇 (재무 관점)</div>
+                        <div class="agent-text">배정 대상자가 대기업 전략적 투자자(SI)이고 1년간 보호예수가 걸려 있다면 단순 운영자금 조달보다 기업 가치 리레이팅 호재로 작용할 가능성이 큽니다.</div>
+                    </div>
+                    <div class="agent-bubble bear">
+                        <div class="agent-name">🐻 AI 리스크 베어 (하방 리스크)</div>
+                        <div class="agent-text">신주 발행가액의 할인율(통상 10%)로 인한 단기 주가 희석률을 반드시 계산해야 합니다. 발행 주식 수 대비 15% 이상 증가 시 단기 매물 부담이 존재합니다.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <p class="disclaimer">
+            ※ 본 포럼의 모든 정보는 AI가 공개된 공공 데이터 및 금융 지표를 바탕으로 자동 생성한 참고용 데이터입니다.<br>
+            어떠한 경우에도 투자 권유나 법적 자문이 아니며, 모든 투자의 책임은 본인에게 있습니다.
+        </p>
+    </div>
+
+    <script>
+        function submitQuestion() {
+            const input = document.getElementById('userInput');
+            const feed = document.getElementById('feed');
+            if (!input.value.trim()) return;
+
+            const question = input.value;
+            input.value = '';
+
+            const newCard = document.createElement('div');
+            newCard.className = 'post-card';
+            newCard.innerHTML = `
+                <div class="post-header">
+                    <span>#실시간 Q&A 분석</span>
+                    <span>방금 전</span>
+                </div>
+                <div class="post-title">Q. ${question}</div>
+                <div class="agent-responses">
+                    <div class="agent-bubble">
+                        <div class="agent-name">🤖 AI 팩트체크 에이전트</div>
+                        <div class="agent-text">질문하신 <strong>'${question}'</strong>에 대한 공공 데이터 및 관련 규정을 수집 중입니다. (API 연동 후 실시간 데이터가 출력됩니다)</div>
+                    </div>
+                    <div class="agent-bubble macro">
+                        <div class="agent-name">📊 AI 정책·거시 에이전트</div>
+                        <div class="agent-text">해당 사항은 최신 법안 및 세법 가이드라인 기준에 따라 해석이 달라질 수 있습니다.</div>
+                    </div>
+                </div>
+            `;
+            feed.insertBefore(newCard, feed.firstChild);
+        }
+    </script>
+</body>
+</html>
