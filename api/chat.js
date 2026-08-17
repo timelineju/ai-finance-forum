@@ -23,31 +23,37 @@ module.exports = async (req, res) => {
 
     const API_KEY = "AQ.Ab8RN6LrakOCV_1ENOw9kyyq6DQAMw0nLwQgSGUP_yo5YskwUw";
 
-    try {
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${API_KEY}`;
-        const response = await fetch(url, {
-            method: "POST",
-            headers: { 
-                "Content-Type": "application/json",
-                "x-goog-api-key": API_KEY
-            },
-            body: JSON.stringify({
-                contents: [{
-                    parts: [{
-                        text: `당신은 한국의 금융, 주식 공시, 정책, 세무 데이터를 심층 분석하는 전문 AI 팩트체크 에이전트입니다. 사용자의 질문에 대해 핵심 팩트와 수치 위주로 3~4문장으로 명확하고 전문적인 한국어로 답변하세요. 답변 끝에는 반드시 '(※ 본 답변은 공개 데이터를 기반으로 한 참고용 정보이며 투자 권유가 아닙니다.)'를 덧붙이세요.\n\n질문: ${question}`
-                    }]
-                }]
-            })
-        });
+    // 트래픽 분산을 위한 모델 리스트 (부하 발생 시 다음 모델로 즉시 자동 전환)
+    const models = ["gemini-2.5-flash", "gemini-3.6-flash"];
 
-        const data = await response.json();
-        
-        if (data.candidates && data.candidates[0]?.content?.parts[0]?.text) {
-            return res.status(200).json({ answer: data.candidates[0].content.parts[0].text });
-        } else {
-            return res.status(500).json({ error: data.error?.message || "답변 생성 실패" });
+    for (const model of models) {
+        try {
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${API_KEY}`;
+            const response = await fetch(url, {
+                method: "POST",
+                headers: { 
+                    "Content-Type": "application/json",
+                    "x-goog-api-key": API_KEY
+                },
+                body: JSON.stringify({
+                    contents: [{
+                        parts: [{
+                            text: `당신은 한국의 금융, 주식 공시, 정책, 세무 데이터를 심층 분석하는 전문 AI 팩트체크 에이전트입니다. 사용자의 질문에 대해 핵심 팩트와 수치 위주로 3~4문장으로 명확하고 전문적인 한국어로 답변하세요. 답변 끝에는 반드시 '(※ 본 답변은 공개 데이터를 기반으로 한 참고용 정보이며 투자 권유가 아닙니다.)'를 덧붙이세요.\n\n질문: ${question}`
+                        }]
+                    }]
+                })
+            });
+
+            const data = await response.json();
+            
+            if (data.candidates && data.candidates[0]?.content?.parts[0]?.text) {
+                return res.status(200).json({ answer: data.candidates[0].content.parts[0].text });
+            }
+        } catch (err) {
+            // 실패 시 다음 모델로 자동 재시도
+            continue;
         }
-    } catch (error) {
-        return res.status(500).json({ error: error.message });
     }
+
+    return res.status(500).json({ error: "일시적인 서버 부하입니다. 잠시 후 다시 질문해 주세요." });
 };
