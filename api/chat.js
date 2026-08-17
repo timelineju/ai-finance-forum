@@ -23,15 +23,16 @@ module.exports = async (req, res) => {
 
     const API_KEY = "AQ.Ab8RN6LrakOCV_1ENOw9kyyq6DQAMw0nLwQgSGUP_yo5YskwUw";
 
-    // 실시간 주가 조회를 위한 금융 데이터 전처리
+    // 사용자가 '오늘/현재 실시간 시세'를 명확하게 물어볼 때만 데이터 주입
     let marketContext = "";
-    if (question.includes("삼성전자") || question.includes("주가") || question.includes("얼마")) {
+    const isPriceQuery = /(오늘|현재|지금|실시간).*(주가|시세|얼마|가격)/.test(question);
+    
+    if (isPriceQuery && question.includes("삼성전자")) {
         try {
-            // 네이버 금융 실시간 시세 크롤링 API 연동 (실시간 시가, 고가, 저가, 현재가 추출)
             const priceRes = await fetch("https://m.stock.naver.com/api/stock/005930/basic");
             const priceData = await priceRes.json();
             if (priceData && priceData.nowPrice) {
-                marketContext = `[실시간 삼성전자(005930) 시장 데이터: 현재가 ${priceData.nowPrice}원, 전일대비 ${priceData.changePrice}원(${priceData.fluctuationRate}%), 시가 ${priceData.openPrice}원, 고가 ${priceData.highPrice}원, 저가 ${priceData.lowPrice}원, 거래량 ${priceData.volume}주]`;
+                marketContext = `[참고용 실시간 삼성전자(005930) 시세: 현재가 ${priceData.nowPrice}원, 시가 ${priceData.openPrice}원, 고가 ${priceData.highPrice}원, 저가 ${priceData.lowPrice}원, 전일대비 ${priceData.changePrice}원(${priceData.fluctuationRate}%)]`;
             }
         } catch (e) {
             marketContext = "";
@@ -40,7 +41,21 @@ module.exports = async (req, res) => {
 
     try {
         const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${API_KEY}`;
-        const promptText = `당신은 한국의 금융, 주식, 정책 데이터 전문 AI 분석가입니다. 아래 제공된 [실시간 시장 데이터]와 질문을 바탕으로, 오늘의 시가, 고가, 저가, 현재가, 등락률 등 핵심 가격 수치를 반드시 포함하여 명확하고 친절하게 답변하세요. 회피성 답변(예: 직접 확인하라)은 절대 하지 마세요.\n\n${marketContext}\n\n사용자 질문: ${question}\n\n답변 끝에는 반드시 '(※ 본 답변은 실시간 금융 공개 데이터를 기반으로 자동 분석된 참고용 정보이며 투자 권유가 아닙니다.)'를 붙이세요.`;
+        const promptText = `당신은 금융·정책·경제 분야에 능통한 스마트하고 자연스러운 'AI 인텔리전스 어시스턴트'입니다.
+
+[상황 및 시간 기준]
+- 현재 시점은 2026년입니다.
+- ${marketContext}
+
+[답변 원칙]
+1. **문맥과 의도 파악**:
+   - 가벼운 인사("안녕", "반가워")에는 시세를 읊지 말고 친절하고 자연스럽게 맞인사를 건네며 어떤 분석이 필요한지 물어보세요.
+   - 특정 과거(예: 2025년 특정 월)를 물으면 이미 지나간 과거 팩트 관점에서 설명하세요.
+   - 시세나 구체적인 지표 질문에는 핵심 수치와 배경을 유연하고 알기 쉽게 요약하세요.
+2. **자연스러운 톤**: 정형화된 틀(불필요한 목차, 기계적인 머리말/꼬리말)에 갇히지 말고, 실제 전문 분석가가 메신저로 설명해주듯 유연하고 깔끔한 구어체로 답변하세요.
+3. 금융/투자 관련 구체적 정보 제공 시 마지막에만 가볍게 '(※ 참고용 정보이며 투자 권유가 아닙니다.)'를 덧붙이세요. (단순 인사에는 붙이지 마세요)
+
+사용자 입력: ${question}`;
 
         const response = await fetch(url, {
             method: "POST",
