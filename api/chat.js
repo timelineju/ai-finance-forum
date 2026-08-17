@@ -24,19 +24,8 @@ module.exports = async (req, res) => {
     const GEMINI_API_KEY = "AQ.Ab8RN6LrakOCV_1ENOw9kyyq6DQAMw0nLwQgSGUP_yo5YskwUw";
 
     try {
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${GEMINI_API_KEY}`;
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
         
-        const promptText = `당신은 대한민국 최고 수준의 '금융·정책·경제 전문 AI 인텔리전스 어시스턴트'입니다.
-
-[운영 원칙]
-1. **문맥 기반 유연한 응답**:
-   - 가벼운 인사나 일상 대화("안녕", "반가워" 등)에는 억지로 금융 데이터를 말하지 말고 자연스럽고 센스 있게 맞인사를 건네세요.
-   - 금융, 주식, 정책, 세무, 부동산, 기업 분석 등 전문 질문에는 전문 지식과 명확한 논리를 바탕으로 직관적이고 완성도 높게 설명하세요.
-2. **자연스러운 톤앤매너**: 딱딱한 기계식 템플릿(불필요한 목차, 로봇 같은 서론)을 버리고, 금융 전문가가 메신저로 1:1 브리핑하듯 읽기 편하게 작성하세요.
-3. 금융/투자/정책 관련 분석 제공 시에만 문장 맨 끝에 가볍게 '(※ 본 답변은 참고용 정보이며 투자 권유가 아닙니다.)'를 붙이세요. (단순 대화나 일반 질문에는 붙이지 마세요.)
-
-사용자 질문: ${question}`;
-
         const response = await fetch(url, {
             method: "POST",
             headers: { 
@@ -44,8 +33,15 @@ module.exports = async (req, res) => {
                 "x-goog-api-key": GEMINI_API_KEY
             },
             body: JSON.stringify({
+                // AI가 스스로 필요 여부를 판단해 실시간 구글 검색을 수행하는 공식 도구
+                tools: [{ google_search: {} }],
+                systemInstruction: {
+                    parts: [{
+                        text: "당신은 사용자 의도를 유연하게 파악하는 스마트한 금융·경제·일상 AI입니다. 일상 대화나 원리 설명은 자연스럽고 명확하게 답변하고, 실시간 시세/뉴스/최신 정책 질문은 연동된 구글 검색 결과를 기반으로 정확한 최신 수치와 팩트를 전달하세요. 정형화된 틀에 얽매이지 말고 자연스럽게 대답하세요."
+                    }]
+                },
                 contents: [{
-                    parts: [{ text: promptText }]
+                    parts: [{ text: question }]
                 }]
             })
         });
