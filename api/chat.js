@@ -21,44 +21,27 @@ module.exports = async (req, res) => {
         return res.status(400).json({ error: '질문 내용이 없습니다.' });
     }
 
-    const API_KEY = "AQ.Ab8RN6LrakOCV_1ENOw9kyyq6DQAMw0nLwQgSGUP_yo5YskwUw";
-
-    // 삼성전자 및 삼전, 주가 관련 모든 키워드 매칭
-    let marketContext = "";
-    const isSamsungQuery = /삼성전자|삼전|005930/.test(question);
-
-    if (isSamsungQuery) {
-        try {
-            const priceRes = await fetch("https://m.stock.naver.com/api/stock/005930/basic", {
-                headers: { 'User-Agent': 'Mozilla/5.0' }
-            });
-            const priceData = await priceRes.json();
-            if (priceData && priceData.nowPrice) {
-                marketContext = `[실시간 삼성전자(005930) 시세: 현재가 ${priceData.nowPrice}원, 전일대비 ${priceData.changePrice}원(${priceData.fluctuationRate}%), 시가 ${priceData.openPrice}원, 고가 ${priceData.highPrice}원, 저가 ${priceData.lowPrice}원]`;
-            }
-        } catch (e) {
-            marketContext = "";
-        }
-    }
+    const GEMINI_API_KEY = "AQ.Ab8RN6LrakOCV_1ENOw9kyyq6DQAMw0nLwQgSGUP_yo5YskwUw";
 
     try {
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${API_KEY}`;
-        const promptText = `당신은 실시간 금융 분석 AI입니다.
-아래 [실시간 데이터]의 수치를 기반으로 질문에 명확하게 답변하세요.
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-3.6-flash:generateContent?key=${GEMINI_API_KEY}`;
+        
+        const promptText = `당신은 대한민국 최고 수준의 '금융·정책·경제 전문 AI 인텔리전스 어시스턴트'입니다.
 
-${marketContext}
+[운영 원칙]
+1. **문맥 기반 유연한 응답**:
+   - 가벼운 인사나 일상 대화("안녕", "반가워" 등)에는 억지로 금융 데이터를 말하지 말고 자연스럽고 센스 있게 맞인사를 건네세요.
+   - 금융, 주식, 정책, 세무, 부동산, 기업 분석 등 전문 질문에는 전문 지식과 명확한 논리를 바탕으로 직관적이고 완성도 높게 설명하세요.
+2. **자연스러운 톤앤매너**: 딱딱한 기계식 템플릿(불필요한 목차, 로봇 같은 서론)을 버리고, 금융 전문가가 메신저로 1:1 브리핑하듯 읽기 편하게 작성하세요.
+3. 금융/투자/정책 관련 분석 제공 시에만 문장 맨 끝에 가볍게 '(※ 본 답변은 참고용 정보이며 투자 권유가 아닙니다.)'를 붙이세요. (단순 대화나 일반 질문에는 붙이지 마세요.)
 
-사용자 질문: ${question}
-
-규칙:
-- 주가 질문일 경우 위 데이터에 나온 현재가, 시가, 고가, 저가, 전일대비 등락폭을 정확한 수치로 안내하세요.
-- 답변 끝에는 '(※ 본 답변은 실시간 금융 공개 데이터를 기반으로 자동 분석된 참고용 정보입니다.)'를 붙이세요.`;
+사용자 질문: ${question}`;
 
         const response = await fetch(url, {
             method: "POST",
             headers: { 
                 "Content-Type": "application/json",
-                "x-goog-api-key": API_KEY
+                "x-goog-api-key": GEMINI_API_KEY
             },
             body: JSON.stringify({
                 contents: [{
