@@ -24,7 +24,8 @@ module.exports = async (req, res) => {
     const GEMINI_API_KEY = "AQ.Ab8RN6LrakOCV_1ENOw9kyyq6DQAMw0nLwQgSGUP_yo5YskwUw";
 
     try {
-        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
+        // v1 정식 엔드포인트 규격 사용
+        const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${GEMINI_API_KEY}`;
         const response = await fetch(url, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
