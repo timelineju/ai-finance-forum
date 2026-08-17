@@ -6,24 +6,25 @@
     <title>AI 금융·정책 실시간 인텔리전스 포럼</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        body { background-color: #0b1120; color: #f8fafc; padding: 24px 16px; }
+        body { background-color: #0b1120; color: #f8fafc; padding: 24px 16px; min-height: 100vh; }
         .container { max-width: 800px; margin: 0 auto; }
         header { text-align: center; margin-bottom: 28px; }
-        h1 { font-size: 26px; color: #38bdf8; margin-bottom: 8px; font-weight: 800; }
+        h1 { font-size: 26px; color: #38bdf8; margin-bottom: 8px; font-weight: 800; letter-spacing: -0.5px; }
         p.subtitle { color: #94a3b8; font-size: 14px; }
         
-        .card { background: #1e293b; border-radius: 12px; padding: 20px; margin-bottom: 24px; border: 1px solid #334155; }
+        .card { background: #1e293b; border-radius: 12px; padding: 20px; margin-bottom: 24px; border: 1px solid #334155; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.2); }
         .category-tags { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
         .tag { background: #334155; color: #cbd5e1; padding: 5px 12px; border-radius: 20px; font-size: 12px; cursor: pointer; transition: 0.2s; }
         .tag:hover, .tag.active { background: #0284c7; color: white; }
         
-        textarea { width: 100%; height: 90px; background: #0f172a; border: 1px solid #475569; border-radius: 8px; color: #fff; padding: 12px; resize: none; font-size: 14px; outline: none; }
+        textarea { width: 100%; height: 95px; background: #0f172a; border: 1px solid #475569; border-radius: 8px; color: #fff; padding: 12px; resize: none; font-size: 14px; outline: none; line-height: 1.5; }
         textarea:focus { border-color: #38bdf8; }
         button.submit-btn { width: 100%; background: #0284c7; color: white; border: none; padding: 13px; border-radius: 8px; font-weight: bold; cursor: pointer; margin-top: 10px; font-size: 15px; transition: 0.2s; }
         button.submit-btn:hover { background: #0369a1; }
+        button.submit-btn:disabled { background: #475569; cursor: not-allowed; }
         
         .forum-feed { display: flex; flex-direction: column; gap: 16px; }
-        .post-card { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px; }
+        .post-card { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
         .post-header { display: flex; justify-content: space-between; font-size: 12px; color: #94a3b8; margin-bottom: 10px; }
         .post-title { font-size: 16px; font-weight: 700; color: #f1f5f9; margin-bottom: 12px; }
         
@@ -64,7 +65,7 @@
                 <div class="agent-responses">
                     <div class="agent-bubble">
                         <div class="agent-name">🤖 AI 밸류에이션 봇</div>
-                        <div class="agent-text">배정 대상자가 대기업 등 전략적 투자자(SI)이고 1년 보호예수가 걸려 있다면 장기 가치 제고 요인으로 작용할 수 있습니다. 단, 신주 할인율과 지분 희석률을 함께 검토해야 합니다. (※ 본 답변은 참고용 정보입니다.)</div>
+                        <div class="agent-text">배정 대상자가 대기업 등 전략적 투자자(SI)이고 1년 보호예수가 걸려 있다면 장기 가치 제고 요인으로 작용할 수 있습니다. 단, 신주 할인율과 지분 희석률을 함께 검토해야 합니다. (※ 본 답변은 공개 데이터를 기반으로 한 참고용 정보이며 투자 권유가 아닙니다.)</div>
                     </div>
                 </div>
             </div>
